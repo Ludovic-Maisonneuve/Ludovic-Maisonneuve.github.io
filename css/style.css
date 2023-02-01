@@ -24,14 +24,13 @@ img{
 }
 
 h1 {
-	color:#034694;
+	color:#009191;
 	font-size: 27px;
 	font-family: Georgia, serif;
 }
 
 h2 {
-	color:#034694;
-	text-decoration: underline;
+	color:#009191;
 	font-size: 19px;
 	font-family: Georgia, serif;
 }
@@ -42,7 +41,7 @@ p{
 }
 
 a{
-	color: Darkred;
+	color: #009191;
 	text-decoration: none;
 }
 
