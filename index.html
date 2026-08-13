@@ -1,306 +1,505 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-171285399-1"></script>
-	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ludovic Maisonneuve</title>
+  <meta name="description"
+    content="Ludovic Maisonneuve — evolutionary biologist and research fellow at the Institute for Advanced Study in Toulouse, using mathematical models to study the evolution of behavior." />
 
-	gtag('config', 'UA-171285399-1');
-	</script>
+  <!-- Curve-and-axes favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%2311805a' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 26V6M6 26h20' stroke='%23c3ccc7'/%3E%3Cpath d='M6 24C14 24 12 8 26 8'/%3E%3C/g%3E%3C/svg%3E" />
 
-	<title> Ludovic Maisonneuve </title>
-	<meta charset = "utf-8"/>
-	<link rel="stylesheet" href="css/style.css" type="text/css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,18..72,400;0,18..72,500;1,18..72,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 
+  <style>
+    :root {
+      --bg: #ffffff;
+      --dot: rgba(17, 40, 31, .055);
+      --ink: #14181b;
+      --ink-soft: #545b60;
+      --ink-faint: #9aa1a4;
+      --green: #11805a;
+      --green-deep: #0c5f43;
+      --green-tint: #eef6f2;
+      --line: #e7eaec;
+      --line-soft: #eef0f1;
+      --shadow: 0 22px 45px -28px rgba(15, 30, 24, .35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background-color: var(--bg);
+      background-image: radial-gradient(circle, var(--dot) 1px, transparent 1.4px);
+      background-size: 26px 26px;
+      background-position: center top;
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 18px;
+      line-height: 1.6;
+      letter-spacing: -0.006em;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+    a { color: var(--green-deep); text-decoration: none; }
+    a.uline {
+      background-image: linear-gradient(var(--green), var(--green));
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      transition: background-size .2s ease, color .2s ease;
+    }
+    a.uline:hover { color: var(--green); background-size: 100% 1.5px; }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .85rem clamp(1.2rem, 5vw, 3rem);
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s ease, background .3s ease;
+    }
+    .topbar.scrolled { border-bottom-color: var(--line); background: rgba(255, 255, 255, .9); }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-weight: 600;
+      font-size: .96rem;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    .navlinks {
+      display: flex;
+      gap: clamp(1rem, 3vw, 2rem);
+      font-family: "JetBrains Mono", monospace;
+      font-size: .74rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .navlinks a { color: var(--ink-soft); }
+    .navlinks a:hover { color: var(--green); }
+    @media (max-width: 560px) { .navlinks { display: none; } }
+
+    /* ---------- Layout ---------- */
+    main { max-width: 900px; margin: 0 auto; padding: 0 clamp(1.2rem, 5vw, 2rem) 4rem; }
+    section { position: relative; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: clamp(1.8rem, 4.5vw, 3.6rem);
+      align-items: center;
+      padding: clamp(2.8rem, 7vw, 5rem) 0 clamp(1.4rem, 4vw, 2.6rem);
+      position: relative;
+    }
+    .hero > .reveal { position: relative; z-index: 1; }
+
+    /* hand-written adaptive-dynamics equations (decorative) */
+    .hw-layer { position: absolute; inset: 0; z-index: 0; overflow: visible; pointer-events: none; }
+    .hw {
+      position: absolute;
+      font-family: "Caveat", cursive;
+      font-weight: 600;
+      color: #2c3a34;
+      opacity: .16;
+      white-space: nowrap;
+    }
+    .hw sub { font-size: .68em; }
+    .hw .frac { display: inline-flex; flex-direction: column; text-align: center; vertical-align: middle; line-height: .82; margin: 0 .12em; }
+    .hw .frac span:first-child { border-bottom: 1.5px solid currentColor; padding-bottom: .02em; }
+    .hw1 { top: 6px; right: 72px; font-size: 1.56rem; transform: rotate(-2.5deg); }
+    .hw2 { bottom: 6px; left: 6px; font-size: 1.72rem; transform: rotate(3deg); }
+    @media (max-width: 860px) { .hw1 { display: none; } }
+    @media (max-width: 720px) { .hw-layer { display: none; } }
+    @media (max-width: 720px) {
+      .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    }
+
+    .portrait {
+      width: 232px;
+      height: 286px;
+      border-radius: 14px;
+      background: #eef1f2 url("images/photo.JPG") center 22% / cover no-repeat;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      font-family: "JetBrains Mono", monospace;
+      font-size: .74rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-tint);
+      border: 1px solid #dcece4;
+      padding: .34rem .7rem;
+      border-radius: 999px;
+      margin: 0 0 1.1rem;
+    }
+
+    h1.name {
+      font-family: "Newsreader", Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(2.9rem, 8vw, 4.4rem);
+      line-height: 1;
+      letter-spacing: -0.015em;
+      margin: 0 0 .7rem;
+      color: var(--ink);
+    }
+
+    .role { font-size: 1.06rem; color: var(--ink-soft); margin: 0 0 1.2rem; }
+    .role b { color: var(--ink); font-weight: 600; }
+
+    .bio { margin: 0 0 1.6rem; max-width: 50ch; color: #2b3033; font-size: 1.05rem; }
+    @media (max-width: 720px) { .bio { max-width: 62ch; } }
+
+    .hero-links { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }
+    @media (max-width: 720px) { .hero-links { justify-content: center; } }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem 1.05rem;
+      border-radius: 10px;
+      font-size: .92rem;
+      font-weight: 500;
+      transition: transform .18s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn-primary { background: var(--green); color: #fff; border: 1px solid var(--green); }
+    .btn-primary:hover { background: var(--green-deep); border-color: var(--green-deep); transform: translateY(-1px); box-shadow: 0 10px 22px -12px rgba(12, 95, 67, .6); }
+    .btn-ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    .btn-ghost:hover { border-color: var(--green); color: var(--green); transform: translateY(-1px); }
+
+    /* ---------- Curve divider ---------- */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      margin: clamp(2.2rem, 5.5vw, 3.4rem) auto;
+      max-width: 620px;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--line) 45%, var(--line));
+    }
+    .divider::after { background: linear-gradient(90deg, var(--line), var(--line) 55%, transparent); }
+    .divider svg { width: 60px; height: 26px; flex: none; }
+
+    /* ---------- Section heading ---------- */
+    .section-head { display: flex; align-items: baseline; gap: .8rem; margin: 0 0 1.8rem; }
+    .section-idx { font-family: "JetBrains Mono", monospace; font-size: .8rem; color: var(--green); }
+    h2.section-title {
+      font-family: "Newsreader", Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(1.9rem, 4.4vw, 2.5rem);
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: var(--ink);
+    }
+    .section-note {
+      margin-left: auto;
+      align-self: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: .74rem;
+      color: var(--ink-faint);
+    }
+    @media (max-width: 520px) { .section-note { display: none; } }
+
+    /* ---------- Publications ---------- */
+    .pub-group { margin-bottom: 2.2rem; }
+    .pub-group h3 {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: .76rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin: 0 0 .9rem;
+      padding-bottom: .45rem;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .pub {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .15rem 1.2rem;
+      padding: .8rem 0 .85rem 1.4rem;
+      position: relative;
+      border-radius: 10px;
+      transition: background .2s ease;
+    }
+    .pub + .pub { border-top: 1px solid var(--line-soft); }
+    .pub:hover { background: #f7faf9; }
+
+    .pub::before {
+      content: "";
+      position: absolute;
+      left: .1rem;
+      top: 1.15rem;
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 2px;
+      transform: rotate(45deg);
+    }
+
+    .pub .title { grid-column: 1; color: var(--ink); font-weight: 500; font-size: 1.02rem; line-height: 1.4; }
+    .pub .meta { grid-column: 1; display: block; color: var(--ink-soft); font-size: .92rem; margin-top: .18rem; }
+    .pub .venue { font-style: italic; }
+    .pub b { font-weight: 600; color: var(--green-deep); }
+
+    .pub .year {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: start;
+      font-family: "JetBrains Mono", monospace;
+      font-size: .72rem;
+      color: var(--ink-soft);
+      background: #f4f6f6;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: .14rem .5rem;
+      height: fit-content;
+      white-space: nowrap;
+    }
+    @media (max-width: 560px) {
+      .pub { grid-template-columns: 1fr; }
+      .pub .year { grid-column: 1; grid-row: auto; margin-top: .45rem; justify-self: start; }
+    }
+
+    .pub .rec { display: block; margin-top: .4rem; font-size: .9rem; color: var(--ink-soft); }
+
+    /* ---------- Footer ---------- */
+    footer { text-align: center; padding: 2.4rem 1rem 1rem; color: var(--ink-soft); font-size: .92rem; }
+    footer .divider { margin-top: 0; }
+    footer .mono { font-size: .78rem; color: var(--ink-faint); }
+
+    /* ---------- Reveal ---------- */
+    .reveal { opacity: 0; transform: translateY(14px); }
+    .reveal.in { opacity: 1; transform: none; transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1 !important; transform: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+  <noscript>
+    <style>.reveal { opacity: 1 !important; transform: none !important; }</style>
+  </noscript>
 </head>
+
 <body>
-<!-- BORDER 
-	<div class="presborder">
-		
-	</div>-->
-
-
-	<div align="left">
-<table border="0" cellpadding="2" width="1200"><tr>
-  <td valign="MIDDLE" align="center" <p> <span class="presimage">  <img src="images/photo.png" width="250"> </span></p> </td>
-
-
-
-
-  <td <p><h1> Ludovic Maisonneuve </h1> </p>
-  
-  	<h2> About me </h2>
-
-<p> I am an evolutionary biologist and research fellow at the <a href="https://www.iast.fr" target="_blank"> Institute for Advanced Study in Toulouse</a>.
-	I study how learning behaviors evolve by building general mathematical models.
-	In particular, I focus on how individuals choose whom to learn from when they acquire information from others.
-	My goal is to understand how ecological and social conditions explain why different social learning strategies exist, why they vary within and between populations, and how they change over an individual’s lifetime.
-	I am also interested in how these social learning strategies influence the accumulation of useful information within the population.
-</p>
-
-
-
-	<h2>Contact</h2>
-<p>
-  ludovic.maisonneuve.2015[at]polytechnique.org
-</p>
-</td>
- </tr>
-</table>
-</div>
-
-
-
-<br>
-
-<!--
-<h1>Current project</h1>
-
-<div align="left">
-<table border="0" cellpadding="2" width="1200"><tr>
-
-<td valign="MIDDLE" align="center" <p> <span class="presimage">  <img src="images/SocialLearning.png" width="150"> </span></p> </td> 
-
-<td	<p>	<h3>Evolution of learning behaviors</h3></p>
-<p>
-	In natural populations, a wide range of learning behaviors has been observed, where individuals may choose whom to learn from based on kinship, prestige, age, or sex. However, under which conditions an individual should favor one characteristic rather than another is still poorly understood. Yet, understanding when specific learning behaviors are likely to evolve is crucial, as these behaviors influence the spread of knowledge and skills within populations and play a pivotal role in a population’s capacity to accumulate and build on existing knowledge. We develop mathematical models to investigate the evolution of learning behaviors and explore the conditions under which natural selection drives the evolution of learning behaviors that enable populations to accumulate knowledge and skills.
-</tr>
-</table>
-</div>-->
-
-<h1>Past projects</h1>
-
-<div align="left">
-<table border="0" cellpadding="2" width="1200"><tr>
-
-<td valign="MIDDLE" align="center" <p> <span class="presimage">  <img src="images/RI.png" width="150"> </span></p> </td> 
-
-<td	<p>	<h3>Conflict between local adaptation and species recognition</h3></p>
-<p>Local adaptation favors the fixation of similar traits between different species sharing a similar environment.
-	However, locally adapted traits can also play a role in mate choice, so that trait convergence might lead to heterospecific courtship and mating, resulting in a loss of gametes, time, and energy. Female preference for non-adapted males may be promoted as it limits heterospecific interaction, creating a conflict between natural and sexual selection.
-    We developed a mathematical framework to investigate the evolution of mate preferences in this context, identifying the conditions under which selection can drive the evolution of preferences that promote phenotypic diversity between species.</p></td>
-
-</tr>
-</table>
-</div>
-
-<div align="left">
-<table border="0" cellpadding="2" width="1200"><tr>
-
-
-<td valign="MIDDLE" align="center" <p> <span class="presimage">  <img src="images/disassortative.png" width="150"> </span></p> </td> 
-
-<td	<p><h3>Evolution of disassortative mating </h3></p>
-<p></span>Mating preference can evolve in response to selective forces and can be based on different cues displayed by the sexual partners. Preferences for these cues are favored when they increase the fitness of the offspring produced. Disassortative mating, whereby individuals tend to choose partners with cues that differ from themselves, is generally maladapted because selection in a given environment usually favors (1) locally adapted traits and (2) assortative mate preference based on these specific traits. Our work highlights the evolutionary mechanisms (genetic architecture, relationship genotype/phenotype) allowing the emergence and the persistence of this apparently maladaptive behavior.</p> </td>
-
-</tr>
-</table>
-</div>
-
-
-<div align="left">
-<table border="0" cellpadding="2" width="1200"><tr>
-
-<td valign="MIDDLE" align="center" <p> <span class="presimage">  <img src="images/socialnetwork.png" width="150"> </span></p> </td> 
-
-
-<td	<p>	<h3>Effect of population network on the evolution of cultural trait </h3> </p>
-
-<p>Computers, spaceships and scientific theories have not been invented by single, isolated individuals. Instead, they result from a collective process by which innovations are gradually added to an existing pool of cultural knowledge, most often over multiple generations. The ability to learn from others is pivotal to this process because it allows innovations to be passed from individual to individual and from generation to generation. Understanding how cultural traits emerge and propagate within groups is crucial to explain the evolution of human societies. We developed a mathematically oriented model that draws on individual-based approaches, inhomogeneous Markov chains and learning algorithms to understand the link between population network and cultural evolution.</p></td>
-
-</tr>
-</table>
-</div>
-
-<h1>Publications <i>(<a href="https://scholar.google.com/citations?user=SS6ym4MAAAAJ&hl=en" target="_blank">Google Scholar</a>) </i></h1>
-
-<h3>Submitted </h3>
-
-<ul>
-<li><p>
-		 <a href="https://www.biorxiv.org/content/10.64898/2026.06.16.732531v1" target="_blank"> When to learn from elders or peers: accessibility-knowledge trade-offs explain diversity in age-biased social learning </a><br/>
-	<b>L Maisonneuve</b>, L Lehmann.  <br/>
-	<i>bioRxiv</i>.
-		 </p>
-	</li>
-	</ul>
-</ul>
-
-<ul>
-<li><p>
-		Accurate quantification of disassortative mating reveals the underlying selective pressures.<br/>
-	<b>L Maisonneuve</b>, C Smadi, S Billiard, V Llaurens.<br/>
-		 </p>
-	</li>
-	</ul>
-</ul>
-
-
-<h3>Published</h3>
-
-<ul>
-<li><p>
-		 <a href="https://doi.org/10.1017/ehs.2026.10044" target="_blank"> How does stochasticity in learning impact the accumulation of knowledge and the evolution of learning?</a><br/>
-	<b>L Maisonneuve</b>, L Lehmann.  <br/>
-	<i>Evolutionary Human Sciences</i>, 2026.
-		 </p>
-	</li>
-	</ul>
-</ul>
-
-<ul>
-<li><p>
-		 <a href="https://doi.org/10.1093/evolut/qpaf030" target="_blank"> The ‘sexual selection hypothesis’ for the origin of aposematism</a>.<br/>
-	<b>L Maisonneuve<strong><sup>*</sup></strong></b>, T G Aubier<strong><sup>*</sup></strong>.  <b>(<strong>*</strong> = equal contribution)</b><br/>
-	<i>Evolution</i>, 2025.
-		 </p>
-	</li>
-	</ul>
-</ul>
-
-<ul>
-<li><p>
-		 <a href="https://royalsocietypublishing.org/doi/10.1098/rspb.2024.2470" target="_blank"> The coevolution of learning schedules and teaching enhances cumulative knowledge and drives a teacher-innovator syndrome</a>.<br/>
-	<b>L Maisonneuve</b>, L Lehmann, C Mullon.  <br/>
-	<i>Proc. R. Soc. B.</i>, 2025.
-		 </p>
-	</li>
-	</ul>
-</ul>
-
-	<ul>
-<li><p>
-	<a href="https://academic.oup.com/evlett/advance-article/doi/10.1093/evlett/qrad058/7504978" target="_blank"> Which cues are sexy? The evolution of mate preference in sympatric species reveals the contrasted effect of adaptation and speciation</a>.<br/>
-	<b>L Maisonneuve</b>, C Smadi, V Llaurens. <br/>
-	<i>Evolution Letters</i>, 2024.
-		 </p>
-	</li>
-	</ul>
-	 							   
-	 <ul>
-	   
-	    <li><p>
-		  <a href="https://doi.org/10.1093/evolinnean/kzad007" target="_blank"> Geographically variable mate preferences shed light on the processes maintaining inversion polymorphism</a>.<br/>
-			P Lacoste, M Chouteau, <b>L Maisonneuve</b>, R Mauxion, M Joron, M McClure.<br/>
-			<i>Evolutionary Journal of the Linnean Society</i>, 2024.
-		 </p>
-	</li>
-
-		 <li><p>
-		  <a href="https://www.journals.uchicago.edu/doi/abs/10.1086/723625?journalCode=an" target="_blank"> The limits of evolutionary convergence in sympatry: reproductive interference and developmental constraints leading to local diversity in aposematic signals</a>.<br/>
-			<b>L Maisonneuve</b>, M Elias, C Smadi, V Llaurens.<br/>
-			 <i>The American Naturalist</i>, 2023.
-		 </p>
-	</li>
-
-		 <li><p>
-		   <a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/evo.14599" target="_blank"> Evolutionary origins of sexual dimorphism: Lessons from female-limited mimicry in butterflies</a>.<br/>
-			<b>L Maisonneuve</b>, C Smadi, V Llaurens.<br/>
-			 <i>Evolution</i>, 2022.
-		 </p>
-	</li>
-
-		 <li><p>
-			   <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.08680" target="_blank"> Uncovering the effects of Müllerian mimicry on the evolution of conspicuousness in colour patterns</a>.<br/>
-			 O Sculfort, <b>L Maisonneuve</b>, M Elias, T G Aubier, V Llaurens.<br/>
-			 <i>Oikos</i>, 2022.
-		 </p>
-	</li>
-
-		 <li><p>
-		   <a href="https://www.journals.uchicago.edu/doi/full/10.1086/716509" target="_blank"> When Do Opposites Attract? A Model Uncovering the Evolution of Disassortative Mating</a>.<br/>
-			 <b>L Maisonneuve</b>, T Beneteau, M Joron, C Smadi, V Llaurens.<br/>
-			 <i>The American Naturalist</i>, 2021.
-		 </p>
-	</li>
-
-		 <li><p>
-		   <a href="https://www.worldscientific.com/doi/abs/10.1142/S0218202520500529" target="_blank"> Convergence of knowledge in a stochastic cultural evolution model with population structure, social learning and credibility biases</a>.<br/>
-			 S Billiard, M Derex, <b>L Maisonneuve</b>, T Rey. <b>(alphabetical order)</b>.<br/>
-			 <i>Mathematical Models and Methods in Applied Sciences</i>, 2020.
-		 </p>
-	</li>
-
-		 <li><p>
-		   <a href="https://academic.oup.com/evolut/article/75/1/149/6730340" target="_blank"> Evolution and genetic architecture of disassortative mating at a locus under heterozygote advantage</a>.<br/>
-			 <b>L Maisonneuve</b>, M Chouteau, M Joron, V Llaurens.<br/>
-			 <i>Evolution</i>, 2020.<br/>
-			 <i>See recommendation:</i>  <a href="https://evolbiol.peercommunityin.org/articles/rec?id=224" target="_blank">Evolutionary insights into disassortative mating and its association to an ecologically relevant supergene</a>.<br/>
-			 C Mullon <br/>
-			 <i>Peer Community in Evolutionary Biology</i>, 2020.
-		 </p>
-	</li>
-</ul>
-
-
-<!--
-=======
-
->>>>>>> Stashed changes
-	<h1>Teaching</h1>
-
-	<h3>Université de Lausanne</h3>
-	<ul>
-	  	<li><p> <b>Genes, Populations, and Evolution</b> Assistant and oral examinator (2023-now)
-	  </li>
-		<li><p> <b>Population Genetics</b> Assistant (2023-now)
-	  </li>
-		<li><p> <b>The Evolution of Cooperation: from Genes to Learning and Culture</b> Oral examinator (2023)
-	  </li>
-		<li><p> <b>Co-evolution, mutualism, parasitism</b> Oral examinator (2023)
-	  </li>
-		<li><p> <b>Biology and society III: analyse and controversies</b> Reports examinateur (2023)
-	  </li>
-	</ul>
-
-	<h3>Sorbonne Université</h3>
-<ul>
-	  	<li><p> <b>Mathematics for sciences (linear algebra and probability)</b> Assistant (2019-2022)
-	  </li>
-		<li><p> <b>Teaching Assistant Linear and bilenear algebra II</b> Oral examinator (2019-2021)
-	  </li>
-		<li><p> <b>Numerical series and series of functions</b> Oral examinateur (2019-2020)
-	  </li>
-	</ul>
-
-<h3>Henri Parriat High School</h3>
-<ul>
-	  	<li><p> <b>Teaching Assistant in High School</b> 6 months of civic duty (2015-2016)
-	  </li>
-	</ul>
-
-	<h1>Conferences, workshops, talks</h1>
-	<ul>
-
-	  <li><p>
-'Une approche mathématique du conflit entre sélection sexuelle et adaptation’. Seminar ’Histoire du calcul des probabilités et des statistiques' at École des hautes études en sciences sociales (EHESS) 2023.
-	  </li>
-
-	   <li><p> 'When do opposites attract? A model uncovering the evolution of disassortative mating'. Talk at the research school of the chair 'Modelisation, Mathematics and Biodiversity' 2021.
-	   </li>
-
-	    <li><p> 'When do opposites attract? A model uncovering the evolution of disassortative mating'. Talk at Virtual Evolution 2021.
-	  </li>
-
-	  <li><p> 'The limits of evolutionary convergence'. Talk at Population Genetics Group Meeting 2021.
-	  </li>
-
-	  <li><p> 'Evolution of disassortative mating in a mimetic polymorphic butterfly'. Talk at the research school of the chair 'Modelisation, Mathematics and Biodiversity' 2019.
-	  </li>
-
-	  <li><p>  'Evolution of disassortative mating in a mimetic polymorphic butterfly'. Talk at Heliconius Meeting 2018.
-	  </li>
-	</ul>
-
-	<h1>Reviewing</h1>
-	<ul>
-	<p> The American Naturalist, Evolution, Philosophical Transactions of the Royal Society B: Biological Sciences, Journal of Evolutionary Biology, Peer Community in Evolutionary Biology, Kinetic & Related Models </p>
-	</ul>
-	-->
-
+  <header class="topbar" id="topbar">
+    <span class="brand"><span class="dot"></span>Ludovic Maisonneuve</span>
+    <nav class="navlinks">
+      <a href="#about">About</a>
+      <a href="#publications">Publications</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO / ABOUT -->
+    <section class="hero" id="about">
+      <div class="hw-layer" aria-hidden="true">
+        <div class="hw hw1">r<sub><i>s</i></sub> = lim<sub><i>T</i>&rarr;&infin;</sub> <span class="frac"><span>1</span><span><i>T</i></span></span> ln <span class="frac"><span><i>N</i>(<i>T</i>)</span><span><i>N</i>(0)</span></span></div>
+        <div class="hw hw2">D(<i>x</i>*) = <span class="frac"><span>&part;w(<i>y</i>,<i>x</i>)</span><span>&part;y</span></span>|<sub><i>y</i>=<i>x</i>*</sub> = 0</div>
+      </div>
+
+      <div class="reveal">
+        <div class="portrait" role="img" aria-label="Portrait of Ludovic Maisonneuve"></div>
+      </div>
+
+      <div class="reveal">
+        <span class="kicker mono">Evolutionary biology · mathematical models</span>
+        <h1 class="name">Ludovic&nbsp;Maisonneuve</h1>
+        <p class="role">Research fellow, <b>Institute for Advanced Study in Toulouse</b></p>
+        <p class="bio">
+          I am an evolutionary biologist and research fellow at the
+          <a class="uline" href="https://www.iast.fr/" target="_blank" rel="noopener">Institute for Advanced Study in Toulouse</a>.
+          I use mathematical models to study the ecological, social, and life-history determinants of the evolution of
+          behavior and its consequences. During my PhD, I first focused on the evolution of criteria used to choose
+          mates. I now study what explains the diversity of social information-use strategies observed in nature and
+          their consequences for how individuals adapt to their environment.
+        </p>
+
+        <div class="hero-links">
+          <a class="btn btn-primary" href="mailto:ludovic.maisonneuve.2015@polytechnique.org">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            Email
+          </a>
+          <a class="btn btn-ghost" href="https://scholar.google.com/citations?user=SS6ym4MAAAAJ&hl=en" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 8-4v6"/><path d="M6 11v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4"/></svg>
+            Google Scholar
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider reveal" aria-hidden="true">
+      <svg viewBox="0 0 60 26" fill="none">
+        <path d="M6 22V4M6 22h50" stroke="#d5dcd9" stroke-width="1" stroke-linecap="round" />
+        <path d="M6 20C16 20 18 7 27 7s10 13 27 3" stroke="#11805a" stroke-width="1.7" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <!-- PUBLICATIONS -->
+    <section id="publications">
+      <div class="section-head reveal">
+        <h2 class="section-title">Publications</h2>
+        <span class="section-note"><a class="uline" href="https://scholar.google.com/citations?user=SS6ym4MAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a></span>
+      </div>
+
+      <div class="pub-group reveal">
+        <h3>Submitted &amp; preprints</h3>
+
+        <div class="pub">
+          <a class="title uline" href="https://www.biorxiv.org/content/10.64898/2026.06.16.732531v1" target="_blank" rel="noopener">When to learn from elders or peers: accessibility&ndash;knowledge trade-offs explain diversity in age-biased social learning</a>
+          <span class="meta"><b>L Maisonneuve</b>, L Lehmann. <span class="venue">bioRxiv</span>.</span>
+          <span class="year mono">bioRxiv</span>
+        </div>
+
+        <div class="pub">
+          <span class="title">Accurate quantification of disassortative mating reveals the underlying selective pressures.</span>
+          <span class="meta"><b>L Maisonneuve</b>, C Smadi, S Billiard, V Llaurens.</span>
+          <span class="year mono">in&nbsp;prep.</span>
+        </div>
+      </div>
+
+      <div class="pub-group reveal">
+        <h3>Published</h3>
+
+        <div class="pub">
+          <a class="title uline" href="https://doi.org/10.1017/ehs.2026.10044" target="_blank" rel="noopener">How does stochasticity in learning impact the accumulation of knowledge and the evolution of learning?</a>
+          <span class="meta"><b>L Maisonneuve</b>, L Lehmann. <span class="venue">Evolutionary Human Sciences</span>.</span>
+          <span class="year mono">2026</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://doi.org/10.1093/evolut/qpaf030" target="_blank" rel="noopener">The &lsquo;sexual selection hypothesis&rsquo; for the origin of aposematism</a>
+          <span class="meta"><b>L Maisonneuve<sup>*</sup></b>, T G Aubier<sup>*</sup>. <span class="venue">Evolution</span>. <em>(* equal contribution)</em></span>
+          <span class="year mono">2025</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://royalsocietypublishing.org/doi/10.1098/rspb.2024.2470" target="_blank" rel="noopener">The coevolution of learning schedules and teaching enhances cumulative knowledge and drives a teacher&ndash;innovator syndrome</a>
+          <span class="meta"><b>L Maisonneuve</b>, L Lehmann, C Mullon. <span class="venue">Proc. R. Soc. B</span>.</span>
+          <span class="year mono">2025</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://academic.oup.com/evlett/advance-article/doi/10.1093/evlett/qrad058/7504978" target="_blank" rel="noopener">Which cues are sexy? The evolution of mate preference in sympatric species reveals the contrasted effect of adaptation and speciation</a>
+          <span class="meta"><b>L Maisonneuve</b>, C Smadi, V Llaurens. <span class="venue">Evolution Letters</span>.</span>
+          <span class="year mono">2024</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://doi.org/10.1093/evolinnean/kzad007" target="_blank" rel="noopener">Geographically variable mate preferences shed light on the processes maintaining inversion polymorphism</a>
+          <span class="meta">P Lacoste, M Chouteau, <b>L Maisonneuve</b>, R Mauxion, M Joron, M McClure. <span class="venue">Evolutionary Journal of the Linnean Society</span>.</span>
+          <span class="year mono">2024</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://www.journals.uchicago.edu/doi/abs/10.1086/723625?journalCode=an" target="_blank" rel="noopener">The limits of evolutionary convergence in sympatry: reproductive interference and developmental constraints leading to local diversity in aposematic signals</a>
+          <span class="meta"><b>L Maisonneuve</b>, M Elias, C Smadi, V Llaurens. <span class="venue">The American Naturalist</span>.</span>
+          <span class="year mono">2023</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/evo.14599" target="_blank" rel="noopener">Evolutionary origins of sexual dimorphism: lessons from female-limited mimicry in butterflies</a>
+          <span class="meta"><b>L Maisonneuve</b>, C Smadi, V Llaurens. <span class="venue">Evolution</span>.</span>
+          <span class="year mono">2022</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://onlinelibrary.wiley.com/doi/full/10.1111/oik.08680" target="_blank" rel="noopener">Uncovering the effects of M&uuml;llerian mimicry on the evolution of conspicuousness in colour patterns</a>
+          <span class="meta">O Sculfort, <b>L Maisonneuve</b>, M Elias, T G Aubier, V Llaurens. <span class="venue">Oikos</span>.</span>
+          <span class="year mono">2022</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://www.journals.uchicago.edu/doi/full/10.1086/716509" target="_blank" rel="noopener">When do opposites attract? A model uncovering the evolution of disassortative mating</a>
+          <span class="meta"><b>L Maisonneuve</b>, T Beneteau, M Joron, C Smadi, V Llaurens. <span class="venue">The American Naturalist</span>.</span>
+          <span class="year mono">2021</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://www.worldscientific.com/doi/abs/10.1142/S0218202520500529" target="_blank" rel="noopener">Convergence of knowledge in a stochastic cultural evolution model with population structure, social learning and credibility biases</a>
+          <span class="meta">S Billiard, M Derex, <b>L Maisonneuve</b>, T Rey. <span class="venue">Mathematical Models and Methods in Applied Sciences</span>. <em>(alphabetical order)</em></span>
+          <span class="year mono">2020</span>
+        </div>
+
+        <div class="pub">
+          <a class="title uline" href="https://academic.oup.com/evolut/article/75/1/149/6730340" target="_blank" rel="noopener">Evolution and genetic architecture of disassortative mating at a locus under heterozygote advantage</a>
+          <span class="meta"><b>L Maisonneuve</b>, M Chouteau, M Joron, V Llaurens. <span class="venue">Evolution</span>.</span>
+          <span class="rec"><em>See recommendation:</em>
+            <a class="uline" href="https://evolbiol.peercommunityin.org/articles/rec?id=224" target="_blank" rel="noopener">Evolutionary insights into disassortative mating and its association to an ecologically relevant supergene</a>,
+            C Mullon, <span class="venue">Peer Community in Evolutionary Biology</span>, 2020.</span>
+          <span class="year mono">2020</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="divider" aria-hidden="true">
+      <svg viewBox="0 0 60 26" fill="none">
+        <path d="M6 22V4M6 22h50" stroke="#d5dcd9" stroke-width="1" stroke-linecap="round" />
+        <path d="M6 20C16 20 18 7 27 7s10 13 27 3" stroke="#11805a" stroke-width="1.7" stroke-linecap="round" />
+      </svg>
+    </div>
+    <p>Ludovic Maisonneuve · Institute for Advanced Study in Toulouse</p>
+    <p class="mono"><a class="uline" href="mailto:ludovic.maisonneuve.2015@polytechnique.org">ludovic.maisonneuve.2015@polytechnique.org</a></p>
+  </footer>
+
+  <script>
+    var bar = document.getElementById('topbar');
+    var onScroll = function () { bar.classList.toggle('scrolled', window.scrollY > 12); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    var items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      items.forEach(function (el) { io.observe(el); });
+    } else {
+      items.forEach(function (el) { el.classList.add('in'); });
+    }
+  </script>
 </body>
+
 </html>
